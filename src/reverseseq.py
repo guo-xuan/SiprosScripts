@@ -2,23 +2,11 @@
 
 
 ## Import Python package modules
-import sys, getopt, warnings, os, re
-from datetime import datetime, date, time
-from collections import namedtuple
-from collections import defaultdict
-import csv
-import math
-import numpy as np
-from Bio import SeqIO
-from Bio.Seq import Seq
-
-import parseconfig
-import sipros_post_module
-
+import sys, getopt, os
 
 def parse_options(argv):
 
-    opts, args = getopt.getopt(argv[1:], "hi:o:",
+    opts, _args = getopt.getopt(argv[1:], "hi:o:",
                                     ["help",
                              	     "input-file",
 	                			     "output-file"])
@@ -47,17 +35,35 @@ def parse_options(argv):
 
 def ReverseSeq(inputFileName, outputFileName) :
     outputFile = open(outputFileName, "w")
-    for record in SeqIO.parse(inputFileName, "fasta" ) :
-        currentSeq = record.seq.tostring()
-        if not(currentSeq.isalpha()) :
-            print "Remove non-alphabetic characters for sequence "+record.id
-            currentSeq = re.sub(r'\W+', '', currentSeq)
-        outputFile.write(">"+record.description+"\n")
-        outputFile.write(currentSeq+"\n")
-        outputFile.write(">Rev_"+record.id+" Decoy\n")
-        outputFile.write(currentSeq[::-1]+"\n")
-
-
+    id_str = ""
+    seq_str = ""
+    seq_new_str = ""
+    inputFile = open(inputFileName, "r")
+    line_str = ""
+    for line_str in inputFile:
+        if line_str[0] == '>':
+            if seq_str != "":
+                seq_new_str = (seq_str[::-1])
+                outputFile.write(id_str)
+                outputFile.write(seq_str)
+                outputFile.write(">Rev_")
+                outputFile.write(id_str[1:])
+                outputFile.write(seq_new_str[1:])
+                outputFile.write("\n")
+            id_str = line_str
+            seq_str = ""
+        else:
+            seq_str += line_str
+    if seq_str != "":
+        seq_new_str = (seq_str[::-1])
+        outputFile.write(id_str)
+        outputFile.write(seq_str)
+        outputFile.write(">Rev_")
+        outputFile.write(id_str[1:])
+        outputFile.write(seq_new_str[1:])
+        outputFile.write("\n")
+        
+    inputFile.close()
     outputFile.close()
 
 

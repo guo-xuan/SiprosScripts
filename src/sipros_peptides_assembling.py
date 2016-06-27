@@ -123,8 +123,8 @@ psm_file_ext = '.psm.txt'
 
 pep_iden_str = '[Peptide_Identification]'
 fasta_database_str = 'FASTA_Database'
-pro_iden_str = '[Protein_Identification]'
-decoy_prefix_str = 'Decoy_Prefix'
+pep_iden_str = '[Protein_Identification]'
+cleave_after_str = 'Decoy_Prefix'
 min_peptide_per_protein_str = 'Min_Peptide_Per_Protein'
 min_unique_peptide_per_protein_str = 'Min_Unique_Peptide_Per_Protein'
 remove_decoy_identification_str = 'Remove_Decoy_Identification'
@@ -191,20 +191,20 @@ def parse_config(config_filename):
     all_config_dict = parseconfig.parseConfigKeyValues(config_filename)
 
     # only save protein_identification config info to config_dict
-    config_dict[decoy_prefix_str] = decoy_prefix
+    config_dict[cleave_after_str] = decoy_prefix
     config_dict[min_peptide_per_protein_str] = min_peptide_per_protein
     config_dict[min_unique_peptide_per_protein_str] = min_unique_peptide_per_protein
     config_dict[remove_decoy_identification_str] = remove_decoy_identification
     for key, value in all_config_dict.items():
         if key == (pep_iden_str + fasta_database_str):
             config_dict[fasta_database_str] = value
-        elif key == (pro_iden_str + decoy_prefix_str):
-            config_dict[decoy_prefix_str] = value
-        elif key == (pro_iden_str + min_peptide_per_protein_str):
+        elif key == (pep_iden_str + cleave_after_str):
+            config_dict[cleave_after_str] = value
+        elif key == (pep_iden_str + min_peptide_per_protein_str):
             config_dict[min_peptide_per_protein_str] = value
-        elif key == (pro_iden_str + min_unique_peptide_per_protein_str):
+        elif key == (pep_iden_str + min_unique_peptide_per_protein_str):
             config_dict[min_unique_peptide_per_protein_str] = value
-        elif key == (pro_iden_str + remove_decoy_identification_str):
+        elif key == (pep_iden_str + remove_decoy_identification_str):
             config_dict[remove_decoy_identification_str] = value
         else:
             continue
@@ -695,7 +695,7 @@ def report_output(config_dict,
     remove_decoy_identification = config_dict[remove_decoy_identification_str]
 
     # to get decoy_prefix
-    decoy_prefix = config_dict[decoy_prefix_str]
+    decoy_prefix = config_dict[cleave_after_str]
 
     # total number of proteins
     total_proteins_before_filtering = len(pro_pep_dict.keys())
@@ -745,7 +745,7 @@ def report_output(config_dict,
     def_para_msg += "#\t# Filtering Parameters #\n"
     def_para_msg += "#\t########################\n"
     def_para_msg += "#\t\n"
-    def_para_msg += "#\t" + pro_iden_str + "\n"
+    def_para_msg += "#\t" + pep_iden_str + "\n"
     def_para_msg += "#\t\n"
     def_para_msg += "#\t# Minimum number of peptides per protein\n"
     def_para_msg += "#\t" + min_peptide_per_protein_str + " = " + str(min_peptide_per_protein) + "\n"

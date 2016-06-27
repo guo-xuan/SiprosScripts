@@ -141,9 +141,9 @@ charge_set = 3
 FDR_parameter = 1.0
 sipros_file_ext = '.sip'
 carbon_mass_diff = 1.003355
-pro_iden_str      = '[Protein_Identification]'
-decoy_prefix_str  = 'Decoy_Prefix'
-FDR_filtering_str = 'FDR_Filtering'
+pep_iden_str      = '[Protein_Identification]'
+cleave_after_str  = 'Decoy_Prefix'
+cleave_before_str = 'FDR_Filtering'
 FDR_threshold_str = 'FDR_Threshold'
 sipros4_column_length = 15
 sipros4_input = None
@@ -201,18 +201,18 @@ def parse_config(config_filename):
     all_config_dict = parseconfig.parseConfigKeyValues(config_filename)
 
     # valiables were defined in global
-    # pro_iden_str      = '[Protein_Identification]'
-    # decoy_prefix_str  = 'Decoy_Prefix'
-    # FDR_filtering_str = 'FDR_Filtering'
+    # pep_iden_str      = '[Protein_Identification]'
+    # cleave_after_str  = 'Decoy_Prefix'
+    # cleave_before_str = 'FDR_Filtering'
     # FDR_threshold_str = 'FDR_Threshold'
 
     # only save protein_identification config info to config_dict
     for key, value in all_config_dict.items():
-        if key == (pro_iden_str + decoy_prefix_str):
-            config_dict[decoy_prefix_str] = value
-        elif key == (pro_iden_str + FDR_filtering_str):
-            config_dict[FDR_filtering_str] = value
-        elif key == (pro_iden_str + FDR_threshold_str):
+        if key == (pep_iden_str + cleave_after_str):
+            config_dict[cleave_after_str] = value
+        elif key == (pep_iden_str + cleave_before_str):
+            config_dict[cleave_before_str] = value
+        elif key == (pep_iden_str + FDR_threshold_str):
             config_dict[FDR_threshold_str] = value
         else:
             continue
@@ -253,7 +253,7 @@ def read_sipros_files(sipros_file_list, config_dict, base_out):
     pep_sub_dict = defaultdict(list)    # initialize dict of list
 
     # decoy_prefix
-    decoy_prefix  = str(config_dict[decoy_prefix_str])
+    decoy_prefix  = str(config_dict[cleave_after_str])
 
     # for psm_data
     psm_data_w = open(psm_data_filename, 'wb')
@@ -841,8 +841,8 @@ def get_cutoff_score(config_dict):
     TF_dict = defaultdict(list)
 
     # get config variables
-    decoy_prefix  = str(config_dict[decoy_prefix_str])
-    FDR_filtering = str(config_dict[FDR_filtering_str])
+    decoy_prefix  = str(config_dict[cleave_after_str])
+    FDR_filtering = str(config_dict[cleave_before_str])
     FDR_threshold = float(config_dict[FDR_threshold_str])
 
     # if FDR_filtering == 'PSM'
@@ -948,8 +948,8 @@ def report_output(sipros_file_list,
     pep_F_dict = defaultdict(list)
 
     # filtering parameters
-    decoy_prefix  = str(config_dict[decoy_prefix_str])
-    FDR_filtering = str(config_dict[FDR_filtering_str])
+    decoy_prefix  = str(config_dict[cleave_after_str])
+    FDR_filtering = str(config_dict[cleave_before_str])
     FDR_threshold = float(config_dict[FDR_threshold_str])
     
     # header message
@@ -992,10 +992,10 @@ def report_output(sipros_file_list,
     pro_iden_msg += "#\t[Protein_Identification]\n"
     pro_iden_msg += "#\t\n"
     pro_iden_msg += "#\t# The prefix of decoy sequences' locus IDs in the database\n"
-    pro_iden_msg += "#\t" + decoy_prefix_str + " = " + str(decoy_prefix) + "\n"
+    pro_iden_msg += "#\t" + cleave_after_str + " = " + str(decoy_prefix) + "\n"
     pro_iden_msg += "#\t\n"
     pro_iden_msg += "#\t# Level of FDR filtering. Options: \"PSM\" and \"Peptide\"\n"
-    pro_iden_msg += "#\t" + FDR_filtering_str + " = " + str(FDR_filtering) + "\n"
+    pro_iden_msg += "#\t" + cleave_before_str + " = " + str(FDR_filtering) + "\n"
     pro_iden_msg += "#\t\n"
     pro_iden_msg += "#\t# FDR threshold for filtering peptide identifications\n"
     pro_iden_msg += "#\t" + FDR_threshold_str + " = " + str(FDR_threshold) + "\n"
